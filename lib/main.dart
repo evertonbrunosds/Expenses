@@ -95,21 +95,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+
+    bool isLandscape = mediaQueryData.orientation == Orientation.landscape;
+
     final AppBar appBar = AppBar(
       title: Text(
         'Despesas Pessoais',
-        style: TextStyle(fontSize: 20 * MediaQuery.of(context).textScaleFactor),
+        style: TextStyle(fontSize: 20 * mediaQueryData.textScaleFactor),
       ),
       actions: <Widget>[
+        if (isLandscape)
+          IconButton(
+            icon: Icon(_showChart ? Icons.list : Icons.show_chart),
+            onPressed: () {
+              setState(() {
+                _showChart = !_showChart;
+              });
+            },
+          ),
         IconButton(
           icon: Icon(Icons.add),
           onPressed: () => _openTransactionFormModal(context),
         ),
       ],
     );
-    final double avaliableHeigth = MediaQuery.of(context).size.height -
+    final double avaliableHeigth = mediaQueryData.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQueryData.padding.top;
 
     return Scaffold(
       appBar: appBar,
@@ -117,30 +130,17 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Exibir gráfico'),
-                Switch(
-                  value: _showChart,
-                  onChanged: (value) {
-                    setState(() {
-                      _showChart = value;
-                    });
-                  },
-                ),
-              ],
-            ),
-            _showChart ? 
-            Container(
-              height: avaliableHeigth * 0.20,
-              child: Chart(_recentTransactions),
-            ) :
-            Container(
-              height: avaliableHeigth * 0.80,
-              child: TransactionList(
-                  transactions: _transactions, onRemove: _removeTransaction),
-            ),
+            if (_showChart || !isLandscape)
+              Container(
+                height: avaliableHeigth * (isLandscape ? 0.5 : 0.20),
+                child: Chart(_recentTransactions),
+              ),
+            if (!_showChart || !isLandscape)
+              Container(
+                height: avaliableHeigth * 0.80,
+                child: TransactionList(
+                    transactions: _transactions, onRemove: _removeTransaction),
+              ),
           ],
         ),
       ),

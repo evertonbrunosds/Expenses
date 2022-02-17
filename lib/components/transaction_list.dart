@@ -10,6 +10,7 @@ class TransactionList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Color errorColor = Theme.of(context).errorColor;
     return transactions.isEmpty
         ? LayoutBuilder(
             builder: ((context, constraints) {
@@ -56,11 +57,17 @@ class TransactionList extends StatelessWidget {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   subtitle: Text(DateFormat('d MMM y').format(tr.date)),
-                  trailing: IconButton(
-                    icon: Icon(Icons.delete),
-                    color: Theme.of(context).errorColor,
-                    onPressed: () => onRemove(tr.id),
-                  ),
+                  trailing: MediaQuery.of(context).size.width > 400
+                      ? TextButton.icon(
+                          onPressed: () => onRemove(tr.id),
+                          label: Text('Excluir', style: TextStyle(color: errorColor)),
+                          icon: Icon(Icons.delete, color: errorColor,),
+                        )
+                      : IconButton(
+                          icon: Icon(Icons.delete),
+                          color: errorColor,
+                          onPressed: () => onRemove(tr.id),
+                        ),
                 ),
               );
             },
