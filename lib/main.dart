@@ -1,5 +1,6 @@
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 main() => runApp(const ExpensesApp());
 
@@ -41,7 +42,7 @@ class MyHomePage extends StatelessWidget {
         title: const Text('Despesas Pessoais'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           const SizedBox(
@@ -71,7 +72,7 @@ class MyHomePage extends StatelessWidget {
                       ),
                       padding: const EdgeInsets.all(10),
                       child: Text(
-                        transaction.value.toString(),
+                        'R\$  ${transaction.value.toStringAsFixed(2)}',
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -89,7 +90,7 @@ class MyHomePage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          transaction.date.toString(),
+                          DateFormat('d MMM y').format(transaction.date),
                           style: const TextStyle(
                             color: Colors.grey,
                           ),
@@ -100,6 +101,38 @@ class MyHomePage extends StatelessWidget {
                 ));
               }).toList()
             ],
+          ),
+          Card(
+            elevation: 5,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: <Widget>[
+                  const TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Titulo',
+                    ),
+                  ),
+                  const TextField(
+                    decoration: InputDecoration(labelText: 'Valor (R\$)'),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Nova Transação',
+                          style: TextStyle(
+                            color: Colors.purple,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
