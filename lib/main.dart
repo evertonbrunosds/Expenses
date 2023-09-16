@@ -5,18 +5,42 @@ import 'package:expenses/components/transaction_list.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
 
-main() => runApp(const ExpensesApp());
+main() => runApp(ExpensesApp());
 
 class ExpensesApp extends StatelessWidget {
-  const ExpensesApp({super.key});
+  ExpensesApp({super.key});
+  final theme = ThemeData(
+    textTheme: ThemeData.light().textTheme.copyWith(
+          titleMedium: const TextStyle(
+            fontFamily: 'OpenSans',
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+    fontFamily: 'Quicksand',
+    appBarTheme: const AppBarTheme(
+      titleTextStyle: TextStyle(
+        fontFamily: 'OpenSans',
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: MyHomePage(
-          key: key,
-        ));
+      debugShowCheckedModeBanner: false,
+      home: MyHomePage(
+        key: key,
+      ),
+      theme: theme.copyWith(
+        colorScheme: theme.colorScheme.copyWith(
+          primary: Colors.deepPurple,
+          secondary: Colors.deepPurple,
+        ),
+      ),
+    );
   }
 }
 
@@ -53,6 +77,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {
       _transactions.add(newTransaction);
     });
+    Navigator.of(context).pop();
   }
 
   void _openTransactionFormModal(final BuildContext context) {
@@ -87,10 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           Column(
-            children: <Widget>[
-              TransactionList(transactions: _transactions),
-              TransactionForm(onSubmit: _addTransaction)
-            ],
+            children: <Widget>[TransactionList(transactions: _transactions)],
           ),
         ],
       ),
