@@ -112,8 +112,9 @@ class _MyHomePageState extends State<MyHomePage> {
         title: const Text('Despesas Pessoais'),
         actions: <Widget>[
           IconButton(
-              onPressed: () => _openTransactionFormModal(context),
-              icon: const Icon(Icons.add))
+            onPressed: () => _openTransactionFormModal(context),
+            icon: const Icon(Icons.add),
+          )
         ],
       ),
       body: Column(
