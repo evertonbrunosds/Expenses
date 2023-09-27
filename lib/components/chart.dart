@@ -45,16 +45,22 @@ class Chart extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: <Widget>[
-            ...groupedTransactions.map((day) {
-              return Flexible(
-                fit: FlexFit.tight,
-                child: ChartBar(
-                  label: day.getName,
-                  value: day.getValue,
-                  percentage: day.getValue / _weekTotalValue,
-                ),
-              );
-            }).toList()
+            ...groupedTransactions
+                .map((day) {
+                  return Flexible(
+                    fit: FlexFit.tight,
+                    child: ChartBar(
+                      label: day.getName,
+                      value: day.getValue,
+                      percentage: _weekTotalValue == 0
+                          ? 0
+                          : day.getValue / _weekTotalValue,
+                    ),
+                  );
+                })
+                .toList()
+                .reversed
+                .toList()
           ],
         ),
       ),
