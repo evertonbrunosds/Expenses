@@ -5,6 +5,7 @@ import 'package:expenses/components/transaction_form.dart';
 import 'package:expenses/components/transaction_list.dart';
 import 'package:expenses/models/transaction.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 main() => runApp(ExpensesApp());
 
@@ -87,36 +88,49 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _openTransactionFormModal(final BuildContext context) {
     showModalBottomSheet(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        context: context,
-        builder: (_) {
-          return TransactionForm(onSubmit: _addTransaction);
-        });
+      context: context,
+      backgroundColor: Theme.of(context).colorScheme.background,
+      builder: (_) => TransactionForm(onSubmit: _addTransaction),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    //IMPEDE A ORIENTAÇÃO RETRATO
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    final appBar = AppBar(
+      title: const Text('Despesas Pessoais'),
+      actions: <Widget>[
+        IconButton(
+          onPressed: () => _openTransactionFormModal(context),
+          icon: const Icon(Icons.add),
+        )
+      ],
+    );
+    final availableHeight = MediaQuery.of(context).size.height -
+        appBar.preferredSize.height -
+        MediaQuery.of(context).padding.top;
+
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Despesas Pessoais'),
-        actions: <Widget>[
-          IconButton(
-            onPressed: () => _openTransactionFormModal(context),
-            icon: const Icon(Icons.add),
-          )
-        ],
-      ),
+      appBar: appBar,
       body: Container(
         color: Theme.of(context).colorScheme.background,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            Chart(recentTransactions: _recentTransactions),
+            SizedBox(
+              height: availableHeight * 0.22,
+              child: Chart(recentTransactions: _recentTransactions),
+            ),
             Column(
               children: <Widget>[
-                TransactionList(
-                    transactions: _transactions, onRemove: _removeTransaction)
+                SizedBox(
+                  height: availableHeight * 0.78,
+                  child: TransactionList(
+                      transactions: _transactions,
+                      onRemove: _removeTransaction),
+                )
               ],
             ),
           ],
