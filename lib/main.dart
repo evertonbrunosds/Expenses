@@ -56,6 +56,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final _transactions = <Transaction>[];
+  bool _showChart = false;
 
   List<Transaction> get _recentTransactions {
     return _transactions.where((transaction) {
@@ -97,7 +98,9 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     //IMPEDE A ORIENTAÇÃO RETRATO
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    bool isLandscape =
+        MediaQuery.of(context).orientation == Orientation.landscape;
     final appBar = AppBar(
       title: const Text('Despesas Pessoais'),
       actions: <Widget>[
@@ -113,27 +116,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
     return Scaffold(
       appBar: appBar,
-      body: Container(
-        color: Theme.of(context).colorScheme.background,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            SizedBox(
-              height: availableHeight * 0.22,
-              child: Chart(recentTransactions: _recentTransactions),
-            ),
-            Column(
-              children: <Widget>[
+      body: SingleChildScrollView(
+        child: Container(
+          height: availableHeight,
+          color: Theme.of(context).colorScheme.background,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              if (isLandscape)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text('Exibir Gráfico'),
+                    Switch(
+                      value: _showChart,
+                      onChanged: (state) => setState(() => _showChart = state),
+                    ),
+                  ],
+                ),
+              if (_showChart || !isLandscape)
                 SizedBox(
-                  height: availableHeight * 0.78,
-                  child: TransactionList(
-                      transactions: _transactions,
-                      onRemove: _removeTransaction),
-                )
-              ],
-            ),
-          ],
+                  height: availableHeight * (isLandscape ? 0.50 : 0.22),
+                  child: Chart(recentTransactions: _recentTransactions),
+                ),
+              if (!_showChart || !isLandscape)
+                Column(
+                  children: <Widget>[
+                    SizedBox(
+                      height: availableHeight * 0.78,
+                      child: TransactionList(
+                          transactions: _transactions,
+                          onRemove: _removeTransaction),
+                    )
+                  ],
+                ),
+            ],
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
