@@ -45,58 +45,65 @@ class _TransactionFormState extends State<TransactionForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).colorScheme.background,
-      elevation: 5,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: <Widget>[
-            TextField(
-              onSubmitted: (_) => _submitForm(),
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Titulo',
+    return SingleChildScrollView(
+      child: Card(
+        color: Theme.of(context).colorScheme.background,
+        elevation: 5,
+        child: Padding(
+          padding: EdgeInsets.only(
+            top: 10,
+            right: 10,
+            left: 10,
+            bottom: 10 + MediaQuery.of(context).viewInsets.bottom,
+          ),
+          child: Column(
+            children: <Widget>[
+              TextField(
+                onSubmitted: (_) => _submitForm(),
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Titulo',
+                ),
               ),
-            ),
-            TextField(
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
-              onSubmitted: (_) => _submitForm(),
-              controller: _valueController,
-              decoration: const InputDecoration(labelText: 'Valor (R\$)'),
-            ),
-            SizedBox(
-              height: 70,
-              child: Row(
+              TextField(
+                keyboardType:
+                    const TextInputType.numberWithOptions(decimal: true),
+                onSubmitted: (_) => _submitForm(),
+                controller: _valueController,
+                decoration: const InputDecoration(labelText: 'Valor (R\$)'),
+              ),
+              SizedBox(
+                height: 70,
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Text(
+                        _isSelectedDate
+                            ? 'Data Selecionada: ${DateFormat('d/MM/y').format(_selectedDate)}'
+                            : 'Nenhuma data selecionada!',
+                      ),
+                    ),
+                    OutlinedButton(
+                      onPressed: _showDatePicker,
+                      child: const Text(
+                        'Selecionar Data',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  Expanded(
-                    child: Text(
-                      _isSelectedDate
-                          ? 'Data Selecionada: ${DateFormat('d/MM/y').format(_selectedDate)}'
-                          : 'Nenhuma data selecionada!',
-                    ),
-                  ),
-                  OutlinedButton(
-                    onPressed: _showDatePicker,
-                    child: const Text(
-                      'Selecionar Data',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
+                  ElevatedButton(
+                    onPressed: _submitForm,
+                    child: const Text('Nova Transação'),
                   ),
                 ],
               ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                ElevatedButton(
-                  onPressed: _submitForm,
-                  child: const Text('Nova Transação'),
-                ),
-              ],
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

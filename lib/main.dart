@@ -99,20 +99,27 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     //IMPEDE A ORIENTAÇÃO RETRATO
     //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-    bool isLandscape =
-        MediaQuery.of(context).orientation == Orientation.landscape;
+    final mediaQuery = MediaQuery.of(context);
+    bool isLandscape = mediaQuery.orientation == Orientation.landscape;
     final appBar = AppBar(
       title: const Text('Despesas Pessoais'),
       actions: <Widget>[
+        if (isLandscape)
+          IconButton(
+            onPressed: () => setState(() {
+              _showChart = !_showChart;
+            }),
+            icon: Icon(_showChart ? Icons.show_chart : Icons.list),
+          ),
         IconButton(
           onPressed: () => _openTransactionFormModal(context),
           icon: const Icon(Icons.add),
         )
       ],
     );
-    final availableHeight = MediaQuery.of(context).size.height -
+    final availableHeight = mediaQuery.size.height -
         appBar.preferredSize.height -
-        MediaQuery.of(context).padding.top;
+        mediaQuery.padding.top;
 
     return Scaffold(
       appBar: appBar,
@@ -124,17 +131,17 @@ class _MyHomePageState extends State<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              if (isLandscape)
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Exibir Gráfico'),
-                    Switch(
-                      value: _showChart,
-                      onChanged: (state) => setState(() => _showChart = state),
-                    ),
-                  ],
-                ),
+              // if (isLandscape)
+              //   Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       const Text('Exibir Gráfico'),
+              //       Switch(
+              //         value: _showChart,
+              //         onChanged: (state) => setState(() => _showChart = state),
+              //       ),
+              //     ],
+              //   ),
               if (_showChart || !isLandscape)
                 SizedBox(
                   height: availableHeight * (isLandscape ? 0.50 : 0.22),
@@ -144,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Column(
                   children: <Widget>[
                     SizedBox(
-                      height: availableHeight * 0.78,
+                      height: availableHeight * (isLandscape ? 1 : 0.78),
                       child: TransactionList(
                           transactions: _transactions,
                           onRemove: _removeTransaction),
