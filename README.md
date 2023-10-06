@@ -1,3 +1,8 @@
+<p id="simbol" align="center">
+	<h1 align="center">Expenses</h1>
+</p>
+
+
 O Expenses é uma ferramenta que visa registrar a ocorrência de despesas diárias. Desse modo, a aplicação apresentada tem por objetivo o intúito demonstrar o cada despesa individualmente numa lista através de seus respectivos nomes, valores e datas. Entre outras funções há a exibição de um pequeno gráfico demonstrativo da última semana em que os gastos ocorreram.
 
 ## Funcionalidades
